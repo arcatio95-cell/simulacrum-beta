@@ -1935,11 +1935,14 @@ const CLASSES = [
   {id:'bard',     name:'Bard',     icon:'🎭', desc:'Charisma +10% XP',                 xpStats:['cha']},
   {id:'merchant', name:'Merchant', icon:'💰', desc:'Wealth +10% XP',                   xpStats:['wlth']},
 ];
-const RACE_BONUS_XP = 200; // ~2 levels of starting advantage per boosted stat
+const RACE_BONUS_XP = 350; // ~1% of MAX_XP starting advantage per boosted stat (proportional to new curve)
 
-// XP curve: reaching level N costs N*100 XP. Level 20 total = 21,000.
-const lvXP  = n => n * 100;
-const MAX_XP = 21000; // sum 1..20 * 100
+// XP curve: reaching level N costs N*175 XP. Level 20 total = 36,750.
+// At 100 XP/day (daily task budget), this takes exactly ~368 days — just over one year.
+// Challenges and class bonuses let dedicated players progress faster but still require
+// real effort (completing hard challenges daily is not trivial).
+const lvXP  = n => n * 175;
+const MAX_XP = 36750; // sum 1..20 * 175 = 210*175 = 36,750
 function fromXP(xp) {
   let lv=0, acc=0;
   while(lv<20){const n=lvXP(lv+1);if(acc+n>xp)break;acc+=n;lv++}
