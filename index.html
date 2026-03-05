@@ -237,6 +237,43 @@ body{background:var(--bg);color:var(--txt);font-family:'Crimson Text',Georgia,se
 .ob-goals-err{color:#e05050;font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.06em;margin-top:.6rem;display:none}
 .ob-goals-err.show{display:block}
 
+/* ── RARITY TIERS ────────────────────────────────────────────────────────── */
+.rarity-badge{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;padding:.22rem .65rem;border:1px solid;display:inline-flex;align-items:center;gap:.3rem}
+.rt-common{color:#b8a890;border-color:rgba(184,168,144,.4);background:rgba(184,168,144,.06)}
+.rt-uncommon{color:#4caf80;border-color:rgba(76,175,128,.4);background:rgba(76,175,128,.06)}
+.rt-rare{color:#4090e0;border-color:rgba(64,144,224,.4);background:rgba(64,144,224,.06)}
+.rt-epic{color:#b068e8;border-color:rgba(176,104,232,.4);background:rgba(176,104,232,.06)}
+.rt-legendary{color:#f0c060;border-color:rgba(240,192,96,.4);background:rgba(240,192,96,.06);animation:titleShimmer 2s ease-in-out infinite alternate}
+.rt-mythic{color:#e84898;border-color:rgba(232,72,152,.4);background:rgba(232,72,152,.06)}
+.rt-transcendent{color:#20e8e8;border-color:rgba(32,232,232,.45);background:rgba(32,232,232,.07)}
+
+/* ── MILESTONE TRACK ────────────────────────────────────────────────────── */
+.milestone-track{display:flex;flex-direction:column;gap:.32rem}
+.milestone-row{display:flex;align-items:center;gap:.6rem;padding:.38rem .5rem;border:1px solid var(--border);transition:background .15s}
+.milestone-row.unlocked{border-color:var(--border-gold)}
+.milestone-row.current{border-color:var(--gold2)!important;background:rgba(200,169,110,.06)}
+.milestone-row.locked{opacity:.32}
+.ms-icon{font-size:1.05rem;flex-shrink:0;width:1.4rem;text-align:center}
+.ms-body{flex:1}
+.ms-name{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--txt2)}
+.ms-desc{font-size:.74rem;color:var(--txt3);margin-top:.06rem}
+.ms-lv{font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.1em;color:var(--txt4);flex-shrink:0}
+.ms-lv.hit{color:var(--gold3)}
+.ms-check{color:var(--gold);font-size:.62rem;flex-shrink:0;margin-left:.2rem}
+
+/* ── CHARACTER PREVIEW ──────────────────────────────────────────────────── */
+.char-preview{display:flex;align-items:flex-start;gap:1.2rem;flex-wrap:wrap}
+.char-preview-svg{flex-shrink:0;border:1px solid var(--border-gold);background:var(--panel2);padding:.45rem;display:flex;align-items:center;justify-content:center}
+.char-preview-info{flex:1;min-width:140px}
+.char-preview-name{font-family:'Cinzel Decorative',serif;font-size:1rem;color:var(--gold2);margin-bottom:.28rem}
+.char-preview-sub{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--txt3)}
+.char-equipped{display:flex;flex-wrap:wrap;gap:.28rem;margin-top:.6rem}
+.char-eq-item{font-family:'Cinzel',serif;font-size:.46rem;letter-spacing:.08em;padding:.18rem .48rem;border:1px solid var(--border);color:var(--txt4)}
+.char-eq-item.equipped{border-color:var(--border-gold);color:var(--gold3)}
+.char-eq-item.pending{opacity:.28}
+.char-sprite-note{font-size:.68rem;color:var(--txt4);margin-top:.7rem;padding-top:.55rem;border-top:1px solid var(--border);line-height:1.5}
+.char-sprite-note code{font-size:.65rem;color:var(--txt3);background:var(--panel3);padding:.05rem .3rem;border:1px solid var(--border)}
+
 /* ── CHARACTER IDENTITY ──────────────────────────────────────────────────── */
 .rc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.5rem;margin-bottom:1rem}
 .rc-card{border:1px solid var(--border);padding:.75rem .65rem;cursor:pointer;transition:all .15s;text-align:center;position:relative}
@@ -1170,8 +1207,10 @@ textarea.fi{resize:vertical;min-height:70px;line-height:1.5}
         <div class="lbl" style="margin-bottom:.28rem">Welcome Back, Adventurer</div>
         <div class="cinzel-d gold" style="font-size:1.65rem" id="d-name">—</div>
         <div class="cinzel gold" style="font-size:.76rem;letter-spacing:.1em;margin-top:.2rem" id="d-cls">—</div>
+        <div id="d-rarity" style="margin-top:.28rem"></div>
         <div class="tot-bar"><div class="tot-fill" id="tot-fill" style="width:0%"></div></div>
         <div class="lbl" id="tot-lbl" style="margin-top:.28rem">—</div>
+        <div id="d-next-milestone" style="margin-top:.22rem"></div>
       </div>
       <div style="display:flex;flex-direction:column;align-items:center;gap:.45rem">
         <div class="lhex"><div class="lhex-n" id="d-lv">0</div><div class="lhex-l">Level</div></div>
@@ -1562,6 +1601,10 @@ textarea.fi{resize:vertical;min-height:70px;line-height:1.5}
 
       <!-- RIGHT: rank title + trophy case + spider -->
       <div>
+        <!-- Character Preview -->
+        <div class="sh" style="margin-bottom:.7rem"><span class="st">👤 Character</span></div>
+        <div class="card orn" style="padding:1.2rem;margin-bottom:1rem" id="p-char-preview"><!-- filled by rProfile() --></div>
+
         <!-- Current rank card -->
         <div class="sh" style="margin-bottom:.7rem"><span class="st">⚔ Current Rank</span></div>
         <div class="card orn" style="padding:1.2rem;margin-bottom:1rem" id="p-rank-card"><!-- filled by rProfile() --></div>
@@ -1582,6 +1625,10 @@ textarea.fi{resize:vertical;min-height:70px;line-height:1.5}
         <div class="card" style="padding:1.1rem;display:flex;justify-content:center">
           <canvas id="spider-profile" width="260" height="260" style="max-width:100%;height:auto"></canvas>
         </div>
+
+        <!-- Milestone Progression Track -->
+        <div class="sh" style="margin-bottom:.7rem;margin-top:.85rem"><span class="st">🏆 Progression Path</span></div>
+        <div class="card" style="padding:1.1rem;margin-bottom:.85rem" id="p-milestones"><!-- filled by rProfile() --></div>
 
         <!-- XP History Chart -->
         <div class="card" style="padding:1.1rem;margin-top:.85rem">
@@ -1936,6 +1983,58 @@ const CLASSES = [
   {id:'merchant', name:'Merchant', icon:'💰', desc:'Wealth +10% XP',                   xpStats:['wlth']},
 ];
 const RACE_BONUS_XP = 350; // ~1% of MAX_XP starting advantage per boosted stat (proportional to new curve)
+
+// ── Character level milestone unlocks (Character Level = sum of all 7 skill levels, max 140) ─
+// When PixelLab sprites are ready, map sprite file paths via RACE_SPRITES / ARMOR_SPRITES / WEAPON_SPRITES
+const CHAR_MILESTONES = [
+  {lv:1,   label:'Base Form',         slot:'body',   icon:'🧍', desc:'Your legend begins'},
+  {lv:5,   label:'Cloak',             slot:'cloak',  icon:'🧥', desc:'A traveler\'s cloak'},
+  {lv:10,  label:'Weapon Upgrade',    slot:'weapon', icon:'⚔',  desc:'A worthy blade'},
+  {lv:15,  label:'Armor Upgrade',     slot:'armor',  icon:'🛡',  desc:'Steel protection'},
+  {lv:20,  label:'Aura',              slot:'aura',   icon:'✨',  desc:'Inner energy awakens'},
+  {lv:30,  label:'Rare Armor',        slot:'armor',  icon:'💠',  desc:'Rare-quality protection'},
+  {lv:40,  label:'Mount',             slot:'mount',  icon:'🐎',  desc:'A loyal companion'},
+  {lv:50,  label:'Epic Aura',         slot:'aura',   icon:'🌟',  desc:'Epic energy surge'},
+  {lv:60,  label:'Animated Idle',     slot:'anim',   icon:'🎭',  desc:'Your form breathes with power'},
+  {lv:70,  label:'Weapon Glow',       slot:'weapon', icon:'⚡',  desc:'Your weapon crackles with energy'},
+  {lv:80,  label:'Epic Armor',        slot:'armor',  icon:'🏰',  desc:'Epic-quality armor forged'},
+  {lv:90,  label:'Animated Aura',     slot:'aura',   icon:'🌊',  desc:'Aura pulsates with life'},
+  {lv:100, label:'Legendary Gear',    slot:'armor',  icon:'👑',  desc:'Legendary quality achieved'},
+  {lv:110, label:'Legendary Aura',    slot:'aura',   icon:'🔥',  desc:'Legendary power radiates outward'},
+  {lv:120, label:'Mythic Armor',      slot:'armor',  icon:'💫',  desc:'Mythic-quality armor'},
+  {lv:130, label:'Cosmic Aura',       slot:'aura',   icon:'🌌',  desc:'Cosmic energy flows through you'},
+  {lv:140, label:'Transcendent Form', slot:'form',   icon:'✦',   desc:'Maximum ascension achieved'},
+];
+
+// ── Rarity tiers by total character level ────────────────────────────────────
+const RARITY_TIERS = [
+  {lv:1,   label:'Common',       color:'#b8a890', bg:'rgba(184,168,144,.08)'},
+  {lv:21,  label:'Uncommon',     color:'#4caf80', bg:'rgba(76,175,128,.08)'},
+  {lv:41,  label:'Rare',         color:'#4090e0', bg:'rgba(64,144,224,.08)'},
+  {lv:61,  label:'Epic',         color:'#b068e8', bg:'rgba(176,104,232,.08)'},
+  {lv:81,  label:'Legendary',    color:'#f0c060', bg:'rgba(240,192,96,.08)'},
+  {lv:101, label:'Mythic',       color:'#e84898', bg:'rgba(232,72,152,.08)'},
+  {lv:121, label:'Transcendent', color:'#20e8e8', bg:'rgba(32,232,232,.08)'},
+];
+
+// ── Per-stat visual evolution at key skill levels ────────────────────────────
+// icon/label shown on stat cards + referenced as sprite layer names for PixelLab assets
+const SKILL_VISUALS = {
+  str:  [{lv:1,icon:'⚔', label:'Basic Stance'   },{lv:5,icon:'🗡', label:'Larger Weapon'   },{lv:10,icon:'🦾',label:'Plated Gauntlets'},{lv:15,icon:'🛡', label:'Heavy Armor'     },{lv:20,icon:'🔥',label:'Battle Aura'    }],
+  dex:  [{lv:1,icon:'🎯',label:'Agile'           },{lv:5,icon:'🗡', label:'Dual Daggers'    },{lv:10,icon:'🧥',label:'Ranger Cloak'   },{lv:15,icon:'🌑',label:'Shadow Effect'   },{lv:20,icon:'💨',label:'Motion Trail'   }],
+  con:  [{lv:1,icon:'🛡', label:'Enduring'        },{lv:5,icon:'🛡', label:'Shield'          },{lv:10,icon:'⚙', label:'Armor Plating'  },{lv:15,icon:'💠',label:'Defensive Aura'  },{lv:20,icon:'🪨',label:'Stone Skin'     }],
+  wis:  [{lv:1,icon:'📖',label:'Mindful'          },{lv:5,icon:'🧘',label:'Meditation Aura' },{lv:10,icon:'😇',label:'Halo'           },{lv:15,icon:'💛',label:'Spirit Glow'     },{lv:20,icon:'⭐',label:'Celestial Aura' }],
+  int:  [{lv:1,icon:'🧠',label:'Curious'          },{lv:5,icon:'📚',label:'Spellbook'       },{lv:10,icon:'🔮',label:'Floating Rune'  },{lv:15,icon:'✨',label:'Magical Aura'   },{lv:20,icon:'🌌',label:'Arcane Halo'   }],
+  cha:  [{lv:1,icon:'✦', label:'Charming'         },{lv:5,icon:'🧥',label:'Noble Cloak'     },{lv:10,icon:'👘',label:'Noble Clothing' },{lv:15,icon:'✨',label:'Sparkle Aura'  },{lv:20,icon:'💫',label:'Radiant Aura'  }],
+  wlth: [{lv:1,icon:'◈', label:'Frugal'           },{lv:5,icon:'👝',label:'Coin Pouch'      },{lv:10,icon:'✨',label:'Gold Trim'      },{lv:15,icon:'💎',label:'Treasure Aura' },{lv:20,icon:'🌟',label:'Golden Glow'   }],
+};
+
+// ── Sprite path constants — fill these when PixelLab assets are exported ─────
+// Each key is a race/armor ID; value should be a relative path or data URL.
+// buildCharSVG() checks these first and falls back to the SVG placeholder.
+const RACE_SPRITES   = {}; // e.g. { human_m: 'assets/sprites/human_m.png' }
+const ARMOR_SPRITES  = {}; // e.g. { common: 'assets/armor/common.png' }
+const WEAPON_SPRITES = {}; // e.g. { sword_glow: 'assets/weapons/sword_glow.png' }
 
 // XP curve: reaching level N costs N*175 XP. Level 20 total = 36,750.
 // At 100 XP/day (daily task budget), this takes exactly ~368 days — just over one year.
@@ -3029,13 +3128,99 @@ function charIdentityHTML(){
   return `<span class="char-badge cb-race">${r.icon} ${r.name}</span><span class="char-badge cb-class">${c.icon} ${c.name}</span>`;
 }
 
-// Returns a milestone icon string for a given stat level
-function milestoneBadge(lv){
-  if(lv>=20) return '<span class="stat-milestone" title="Level 20 — Prestige Crown">👑</span>';
-  if(lv>=15) return '<span class="stat-milestone" title="Level 15 — Legendary Weapon">⚔</span>';
-  if(lv>=10) return '<span class="stat-milestone" title="Level 10 — Aura Awakened">✨</span>';
-  if(lv>=5)  return '<span class="stat-milestone" title="Level 5 — First Armor">⭐</span>';
-  return '';
+// ── Progression helpers ───────────────────────────────────────────────────────
+function getRarityTier(totLv){
+  let tier=RARITY_TIERS[0];
+  for(const t of RARITY_TIERS){ if(totLv>=t.lv) tier=t; else break; }
+  return tier;
+}
+function getUnlockedMilestones(totLv){ return CHAR_MILESTONES.filter(m=>totLv>=m.lv); }
+function getNextMilestone(totLv){ return CHAR_MILESTONES.find(m=>totLv<m.lv)||null; }
+function getSkillVisual(sid,lv){
+  const vs=SKILL_VISUALS[sid]||[];
+  let cur=vs[0]||{icon:'',label:''};
+  for(const v of vs){ if(lv>=v.lv) cur=v; else break; }
+  return cur;
+}
+
+// Returns a stat-specific milestone icon for a given skill level
+function milestoneBadge(sid, lv){
+  const v=getSkillVisual(sid, lv);
+  return (v && lv>=5) ? `<span class="stat-milestone" title="${v.label}">${v.icon}</span>` : '';
+}
+
+// Builds the SVG character preview placeholder.
+// When PixelLab assets are ready, populate RACE_SPRITES / ARMOR_SPRITES / WEAPON_SPRITES
+// and this function will render <image> layers instead of the SVG shapes.
+function buildCharSVG(totLv){
+  const tier    = getRarityTier(totLv);
+  const r       = getRaceObj();
+  const ms      = getUnlockedMilestones(totLv);
+  const hasCloak  = totLv>=5;
+  const hasWeapon = totLv>=10;
+  const hasArmor  = totLv>=15;
+  const hasAura   = totLv>=20;
+  const ac = tier.color; // aura color
+
+  // If a real sprite exists for this race, render as <image> overlay
+  const rSpr = RACE_SPRITES[r.id+'_m'] || RACE_SPRITES[r.id];
+  const aSpr = ARMOR_SPRITES[tier.label.toLowerCase()];
+  if(rSpr){
+    return `<svg width="96" height="96" viewBox="0 0 64 64" shape-rendering="crispEdges" style="image-rendering:pixelated">
+      ${hasAura?`<circle cx="32" cy="32" r="30" fill="none" stroke="${ac}" stroke-width="1.5" opacity="0.4" stroke-dasharray="3 3"/>`:''}
+      <image href="${rSpr}" x="8" y="4" width="48" height="56"/>
+      ${aSpr?`<image href="${aSpr}" x="8" y="4" width="48" height="56"/>`:''}
+    </svg>`;
+  }
+
+  // ── SVG placeholder ────────────────────────────────────────────────────────
+  const SKIN ={human:'#c8956c',elf:'#d4c4a0',dwarf:'#b87848',orc:'#78a850',tiefling:'#9060c0',halfling:'#c8a870'};
+  const HAIR ={human:'#6a4020',elf:'#d4a830',dwarf:'#c07028',orc:'#303820',tiefling:'#800040',halfling:'#803820'};
+  const ARMOR={Common:'#8a6840',Uncommon:'#3a7a50',Rare:'#2858a0',Epic:'#5828a0',Legendary:'#906020',Mythic:'#a02060',Transcendent:'#187080'};
+  const skin=SKIN[r.id]||'#c8956c', hair=HAIR[r.id]||'#6a4020', armorC=ARMOR[tier.label]||'#8a6840';
+
+  const aura    = hasAura   ? `<circle cx="32" cy="40" r="28" fill="none" stroke="${ac}" stroke-width="1.2" opacity="0.35" stroke-dasharray="3 3"/>
+    <ellipse cx="32" cy="70" rx="18" ry="3" fill="${ac}" opacity="0.18"/>` : '';
+  const cloakL  = hasCloak  ? `<path d="M19,32 Q13,48 15,62 L19,62 Q21,50 23,40 Z" fill="${armorC}" opacity="0.8"/>` : '';
+  const cloakR  = hasCloak  ? `<path d="M45,32 Q51,48 49,62 L45,62 Q43,50 41,40 Z" fill="${armorC}" opacity="0.8"/>` : '';
+  const weapon  = hasWeapon ? `<rect x="50" y="20" width="3" height="22" fill="${totLv>=70?ac:'#909090'}" rx="1"/>
+    <rect x="47" y="25" width="9" height="2" fill="${totLv>=70?ac:'#b0b0b0'}" rx="0.5"/>` : '';
+  const gem     = hasArmor  ? `<rect x="28" y="37" width="8" height="5" fill="${ac}" opacity="0.65" rx="1"/>` : '';
+  const raceExt = r.id==='tiefling'
+    ? `<polygon points="26,18 24,12 28,17" fill="${skin}"/><polygon points="38,18 36,12 40,17" fill="${skin}"/>`
+    : r.id==='elf'
+    ? `<path d="M22,30 Q18,32 20,35 Q22,33 24,33 Z" fill="${skin}"/><path d="M42,30 Q46,32 44,35 Q42,33 40,33 Z" fill="${skin}"/>`
+    : r.id==='dwarf'
+    ? `<rect x="24" y="38" width="16" height="4" rx="2" fill="${hair}" opacity="0.75"/>`
+    : r.id==='orc'
+    ? `<path d="M26,36 l-2,4 l3,-2 Z" fill="${skin}"/><path d="M38,36 l2,4 l-3,-2 Z" fill="${skin}"/>` : '';
+
+  return `<svg width="96" height="96" viewBox="0 0 64 80" shape-rendering="crispEdges" style="image-rendering:pixelated">
+    <ellipse cx="32" cy="75" rx="13" ry="2.5" fill="rgba(0,0,0,0.28)"/>
+    ${aura}
+    <rect x="24" y="58" width="6" height="14" fill="${hasArmor?armorC:skin}" rx="1"/>
+    <rect x="34" y="58" width="6" height="14" fill="${hasArmor?armorC:skin}" rx="1"/>
+    <rect x="23" y="69" width="7" height="3" fill="${armorC}" rx="1"/>
+    <rect x="34" y="69" width="7" height="3" fill="${armorC}" rx="1"/>
+    <rect x="20" y="36" width="24" height="23" fill="${hasArmor?armorC:skin}" rx="2"/>
+    ${gem}${cloakL}${cloakR}
+    <rect x="13" y="36" width="7" height="17" fill="${hasArmor?armorC:skin}" rx="1"/>
+    <rect x="44" y="36" width="7" height="17" fill="${hasArmor?armorC:skin}" rx="1"/>
+    <rect x="13" y="51" width="6" height="4" fill="${skin}" rx="1"/>
+    <rect x="45" y="51" width="6" height="4" fill="${skin}" rx="1"/>
+    ${weapon}
+    <rect x="27" y="31" width="10" height="6" fill="${skin}"/>
+    <rect x="20" y="15" width="24" height="18" fill="${skin}" rx="3"/>
+    ${raceExt}
+    <rect x="20" y="15" width="24" height="5" fill="${hair}" rx="2"/>
+    <rect x="20" y="15" width="4" height="10" fill="${hair}"/>
+    <rect x="40" y="15" width="4" height="10" fill="${hair}"/>
+    <rect x="24" y="23" width="4" height="3" fill="#1a1020" rx="1"/>
+    <rect x="36" y="23" width="4" height="3" fill="#1a1020" rx="1"/>
+    <rect x="25" y="23" width="1" height="1" fill="rgba(255,255,255,0.55)"/>
+    <rect x="37" y="23" width="1" height="1" fill="rgba(255,255,255,0.55)"/>
+    <rect x="28" y="28" width="8" height="2" fill="#7a3820" rx="1"/>
+  </svg>`;
 }
 
 // Builds the race & class selection grids for onboarding step 2
@@ -3142,6 +3327,16 @@ function rDash(){
   document.getElementById('d-name').textContent=user.name;
   document.getElementById('d-cls').innerHTML=activeTitleBadgeHTML();
   document.getElementById('d-lv').textContent=totLv;
+  // Rarity tier badge
+  const _tier=getRarityTier(totLv);
+  const _rarEl=document.getElementById('d-rarity');
+  if(_rarEl) _rarEl.innerHTML=`<span class="rarity-badge rt-${_tier.label.toLowerCase()}">${_tier.label}</span>`;
+  // Next milestone indicator
+  const _nms=getNextMilestone(totLv);
+  const _msEl=document.getElementById('d-next-milestone');
+  if(_msEl) _msEl.innerHTML=_nms
+    ?`<span class="lbl" style="font-size:.48rem">${_nms.icon} Next: ${esc(_nms.label)} at Lv ${_nms.lv} <span style="color:var(--txt4)">(${_nms.lv-totLv} level${_nms.lv-totLv===1?'':'s'} away)</span></span>`
+    :`<span class="lbl" style="font-size:.48rem;color:var(--gold)">✦ All milestones unlocked</span>`;
   document.getElementById('d-str').textContent=streak;
   document.getElementById('tot-fill').style.width=Math.min(100,(totXP/maxXP*100)).toFixed(1)+'%';
   document.getElementById('tot-lbl').textContent=`${totXP.toLocaleString()} / ${maxXP.toLocaleString()} Total XP`;
@@ -3158,7 +3353,7 @@ function rDash(){
     d.style.animationDelay=(i*.04)+'s';
     d.onclick=()=>openStat(s.id);
     const isBoosted=getClassXPMult(s.id)>1;
-    d.innerHTML=`<div class="sc-top"><div class="sc-name c${s.id}">${s.icon} ${s.name.toUpperCase()}${isBoosted?'<span class="stat-milestone" title="'+getClassObj().name+' class — +10% XP" style="color:var(--gold)">✦</span>':''}</div><div class="sc-lv">Lv. ${lv.lv}${milestoneBadge(lv.lv)}${lv.prestige?' ★':''}</div></div><div class="bar-t"><div class="bar-f b${s.id}" style="width:${lv.pct}%"></div></div><div class="sc-xp">${lv.lv<20?`${lv.cur} / ${lv.nxt} XP → Level ${lv.lv+1}`:'👑 MAX LEVEL'}</div>`;
+    d.innerHTML=`<div class="sc-top"><div class="sc-name c${s.id}">${s.icon} ${s.name.toUpperCase()}${isBoosted?'<span class="stat-milestone" title="'+getClassObj().name+' class — +10% XP" style="color:var(--gold)">✦</span>':''}</div><div class="sc-lv">Lv. ${lv.lv}${milestoneBadge(s.id,lv.lv)}${lv.prestige?' ★':''}</div></div><div class="bar-t"><div class="bar-f b${s.id}" style="width:${lv.pct}%"></div></div><div class="sc-xp">${lv.lv<20?`${lv.cur} / ${lv.nxt} XP → Level ${lv.lv+1}`:'👑 MAX LEVEL'}</div>`;
     g.appendChild(d);
   });
   // Spider — deferred one frame so canvas has non-zero layout dimensions
@@ -4510,6 +4705,48 @@ function rProfile(){
   const statLvs=STATS.map(s=>({lv:Math.min(20,fromXP(xpMap[s.id]||0).lv),css:s.css}));
   requestAnimationFrame(()=>drawSpider('spider-profile',statLvs,20));
   drawHistChart();
+
+  // ── Character Preview panel ───────────────────────────────────────────────
+  const prevEl=document.getElementById('p-char-preview');
+  if(prevEl){
+    const tier=getRarityTier(totLv);
+    const nextMs=getNextMilestone(totLv);
+    const allMs=getUnlockedMilestones(totLv);
+    prevEl.innerHTML=`
+      <div class="char-preview">
+        <div class="char-preview-svg">${buildCharSVG(totLv)}</div>
+        <div class="char-preview-info">
+          <div class="char-preview-name">${esc(user.name)}</div>
+          <div class="char-preview-sub">${getRaceObj().icon} ${getRaceObj().name} · ${getClassObj().icon} ${getClassObj().name}</div>
+          <div style="margin-top:.45rem"><span class="rarity-badge rt-${tier.label.toLowerCase()}">${tier.label}</span></div>
+          <div class="char-equipped">
+            ${CHAR_MILESTONES.map(m=>`<span class="char-eq-item ${totLv>=m.lv?'equipped':'pending'}" title="Lv ${m.lv} — ${esc(m.desc)}">${m.icon} ${esc(m.label)}</span>`).join('')}
+          </div>
+          ${nextMs
+            ?`<div style="font-size:.75rem;color:var(--txt3);margin-top:.55rem;line-height:1.5">${nextMs.icon} Next: <strong style="color:var(--txt2)">${esc(nextMs.label)}</strong> at Character Lv ${nextMs.lv} <span style="color:var(--txt4)">(${nextMs.lv-totLv} level${nextMs.lv-totLv===1?'':'s'} away)</span></div>`
+            :`<div style="font-size:.75rem;color:var(--gold);margin-top:.55rem">✦ All milestones unlocked — Transcendent Form achieved</div>`}
+        </div>
+      </div>
+      <div class="char-sprite-note">Sprite placeholder · PixelLab assets replace this automatically — add paths to <code>RACE_SPRITES</code> &amp; <code>ARMOR_SPRITES</code> constants.</div>`;
+  }
+
+  // ── Milestone Progression Track ───────────────────────────────────────────
+  const msTrack=document.getElementById('p-milestones');
+  if(msTrack){
+    msTrack.innerHTML=`<div class="milestone-track">${CHAR_MILESTONES.map((m,i)=>{
+      const isUnlocked=totLv>=m.lv;
+      const isCurrent=isUnlocked&&(i===CHAR_MILESTONES.length-1||totLv<CHAR_MILESTONES[i+1].lv);
+      return `<div class="milestone-row ${isUnlocked?'unlocked':'locked'} ${isCurrent?'current':''}">
+        <div class="ms-icon">${m.icon}</div>
+        <div class="ms-body">
+          <div class="ms-name">${esc(m.label)}</div>
+          <div class="ms-desc">${esc(m.desc)}</div>
+        </div>
+        <div class="ms-lv ${isUnlocked?'hit':''}">Lv ${m.lv}</div>
+        ${isUnlocked?'<div class="ms-check">✓</div>':''}
+      </div>`;
+    }).join('')}</div>`;
+  }
 }
 
 function saveProfile(){
