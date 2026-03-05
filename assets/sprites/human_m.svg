@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 72" width="64" height="72" shape-rendering="crispEdges">
+  <!-- Human Male - warm tan skin, brown hair, neutral build -->
+  <!-- Shadow -->
+  <ellipse cx="32" cy="70" rx="14" ry="3" fill="rgba(0,0,0,0.18)"/>
+  <!-- Legs -->
+  <rect x="22" y="52" width="8" height="14" fill="#3a2e22"/>
+  <rect x="34" y="52" width="8" height="14" fill="#3a2e22"/>
+  <!-- Boots -->
+  <rect x="21" y="62" width="10" height="4" fill="#2a1e14"/>
+  <rect x="33" y="62" width="10" height="4" fill="#2a1e14"/>
+  <!-- Torso -->
+  <rect x="20" y="30" width="24" height="24" fill="#6b8cba"/>
+  <!-- Belt -->
+  <rect x="20" y="50" width="24" height="3" fill="#8b6940"/>
+  <rect x="29" y="50" width="6" height="3" fill="#c9952a"/>
+  <!-- Arms -->
+  <rect x="12" y="30" width="8" height="20" fill="#6b8cba"/>
+  <rect x="44" y="30" width="8" height="20" fill="#6b8cba"/>
+  <!-- Hands -->
+  <rect x="12" y="50" width="8" height="6" fill="#d4a574"/>
+  <rect x="44" y="50" width="8" height="6" fill="#d4a574"/>
+  <!-- Neck -->
+  <rect x="28" y="24" width="8" height="8" fill="#d4a574"/>
+  <!-- Head -->
+  <rect x="20" y="8" width="24" height="22" fill="#d4a574"/>
+  <!-- Hair -->
+  <rect x="20" y="8" width="24" height="7" fill="#5c3d20"/>
+  <rect x="18" y="10" width="4" height="10" fill="#5c3d20"/>
+  <rect x="42" y="10" width="4" height="10" fill="#5c3d20"/>
+  <!-- Eyes -->
+  <rect x="24" y="18" width="4" height="4" fill="#2c1a0e"/>
+  <rect x="36" y="18" width="4" height="4" fill="#2c1a0e"/>
+  <rect x="25" y="19" width="2" height="2" fill="#6aa0d0"/>
+  <rect x="37" y="19" width="2" height="2" fill="#6aa0d0"/>
+  <!-- Eyebrows -->
+  <rect x="23" y="16" width="6" height="2" fill="#3d2510"/>
+  <rect x="35" y="16" width="6" height="2" fill="#3d2510"/>
+  <!-- Mouth -->
+  <rect x="27" y="25" width="10" height="2" fill="#b8856a"/>
+  <!-- Shirt collar -->
+  <rect x="24" y="28" width="6" height="4" fill="#4a6a9a"/>
+  <rect x="34" y="28" width="6" height="4" fill="#4a6a9a"/>
+  <!-- Tunic line -->
+  <rect x="31" y="30" width="2" height="18" fill="#4a6a9a"/>
+  <!-- Shoulder pads -->
+  <rect x="18" y="28" width="6" height="6" fill="#7a9cca"/>
+  <rect x="40" y="28" width="6" height="6" fill="#7a9cca"/>
+</svg>

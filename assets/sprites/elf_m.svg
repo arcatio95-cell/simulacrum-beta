@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 72" width="64" height="72" shape-rendering="crispEdges">
+  <!-- Elf Male - pale skin, silver/white hair, slim build, pointed ears -->
+  <!-- Shadow -->
+  <ellipse cx="32" cy="70" rx="12" ry="3" fill="rgba(0,0,0,0.18)"/>
+  <!-- Legs - slim -->
+  <rect x="23" y="52" width="7" height="14" fill="#1a3020"/>
+  <rect x="34" y="52" width="7" height="14" fill="#1a3020"/>
+  <!-- Boots -->
+  <rect x="22" y="63" width="9" height="3" fill="#0f1f14"/>
+  <rect x="33" y="63" width="9" height="3" fill="#0f1f14"/>
+  <!-- Torso - slim -->
+  <rect x="21" y="30" width="22" height="24" fill="#2a5c3a"/>
+  <!-- Belt -->
+  <rect x="21" y="50" width="22" height="2" fill="#c0a850"/>
+  <rect x="29" y="49" width="6" height="4" fill="#e8c060"/>
+  <!-- Arms - slim -->
+  <rect x="13" y="30" width="8" height="22" fill="#2a5c3a"/>
+  <rect x="43" y="30" width="8" height="22" fill="#2a5c3a"/>
+  <!-- Hands -->
+  <rect x="13" y="52" width="8" height="5" fill="#e8dcc8"/>
+  <rect x="43" y="52" width="8" height="5" fill="#e8dcc8"/>
+  <!-- Neck -->
+  <rect x="28" y="24" width="8" height="8" fill="#e8dcc8"/>
+  <!-- Head - slightly narrower -->
+  <rect x="21" y="8" width="22" height="22" fill="#e8dcc8"/>
+  <!-- Pointed ears -->
+  <rect x="17" y="12" width="4" height="8" fill="#e8dcc8"/>
+  <rect x="15" y="10" width="4" height="4" fill="#e8dcc8"/>
+  <rect x="43" y="12" width="4" height="8" fill="#e8dcc8"/>
+  <rect x="45" y="10" width="4" height="4" fill="#e8dcc8"/>
+  <!-- Silver hair -->
+  <rect x="21" y="8" width="22" height="6" fill="#d0d8e8"/>
+  <rect x="19" y="9" width="4" height="8" fill="#d0d8e8"/>
+  <rect x="41" y="9" width="4" height="8" fill="#d0d8e8"/>
+  <!-- Hair flow back -->
+  <rect x="41" y="14" width="6" height="12" fill="#d0d8e8"/>
+  <!-- Eyes - almond shaped, green -->
+  <rect x="24" y="17" width="5" height="3" fill="#1a1a2e"/>
+  <rect x="35" y="17" width="5" height="3" fill="#1a1a2e"/>
+  <rect x="25" y="17" width="3" height="3" fill="#40c878"/>
+  <rect x="36" y="17" width="3" height="3" fill="#40c878"/>
+  <rect x="26" y="18" width="1" height="1" fill="#80f0a0"/>
+  <rect x="37" y="18" width="1" height="1" fill="#80f0a0"/>
+  <!-- Eyebrows - angled/arched -->
+  <rect x="23" y="15" width="7" height="2" fill="#b0b8c8"/>
+  <rect x="34" y="15" width="7" height="2" fill="#b0b8c8"/>
+  <!-- Mouth - subtle -->
+  <rect x="28" y="23" width="8" height="2" fill="#c8a898"/>
+  <!-- Tunic details -->
+  <rect x="30" y="30" width="4" height="20" fill="#1e4428"/>
+  <!-- Leaf-shaped clasp -->
+  <rect x="29" y="32" width="6" height="4" fill="#c0a850"/>
+  <!-- Shoulder leaf pauldrons -->
+  <rect x="19" y="28" width="6" height="5" fill="#3a7c4a"/>
+  <rect x="39" y="28" width="6" height="5" fill="#3a7c4a"/>
+  <rect x="17" y="29" width="4" height="3" fill="#3a7c4a"/>
+  <rect x="43" y="29" width="4" height="3" fill="#3a7c4a"/>
+</svg>
