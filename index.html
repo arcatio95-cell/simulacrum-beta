@@ -237,6 +237,22 @@ body{background:var(--bg);color:var(--txt);font-family:'Crimson Text',Georgia,se
 .ob-goals-err{color:#e05050;font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.06em;margin-top:.6rem;display:none}
 .ob-goals-err.show{display:block}
 
+/* ── CHARACTER IDENTITY ──────────────────────────────────────────────────── */
+.rc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.5rem;margin-bottom:1rem}
+.rc-card{border:1px solid var(--border);padding:.75rem .65rem;cursor:pointer;transition:all .15s;text-align:center;position:relative}
+.rc-card:hover{border-color:var(--border2);background:var(--panel2)}
+.rc-card.sel{border-color:var(--gold)!important;background:rgba(200,169,110,.08)}
+.rc-card.sel::after{content:'✓';position:absolute;top:4px;right:7px;font-family:'Cinzel',serif;font-size:.55rem;color:var(--gold)}
+.rc-card-icon{font-size:1.5rem;margin-bottom:.3rem}
+.rc-card-name{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--txt2)}
+.rc-card-bonus{font-size:.76rem;color:var(--txt3);margin-top:.25rem;line-height:1.35}
+.char-identity{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.4rem}
+.char-badge{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;padding:.2rem .6rem;border:1px solid;display:inline-flex;align-items:center;gap:.3rem}
+.char-badge.cb-race{border-color:rgba(160,96,216,.45);color:#c080f0;background:rgba(120,80,200,.07)}
+.char-badge.cb-class{border-color:var(--border-gold);color:var(--gold);background:rgba(200,169,110,.07)}
+.stat-milestone{font-size:.62rem;margin-left:.18rem;opacity:.9;cursor:default}
+.ob-section-sep{font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:1.2rem 0 .5rem;padding-top:.9rem;border-top:1px solid var(--border-gold)}
+
 /* ── ACTIVITY FEED ───────────────────────────────────────────────────────── */
 .feed-tabs{display:flex;gap:.4rem;margin-bottom:1rem}
 .feed-tab{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;padding:.35rem .85rem;border:1px solid var(--border);color:var(--txt3);cursor:pointer;transition:all .15s}
@@ -982,6 +998,7 @@ textarea.fi{resize:vertical;min-height:70px;line-height:1.5}
       <div class="ob-dot" id="ob-d2"></div>
       <div class="ob-dot" id="ob-d3"></div>
       <div class="ob-dot" id="ob-d4"></div>
+      <div class="ob-dot" id="ob-d5"></div>
     </div>
 
     <!-- ── Step 0: Welcome ── -->
@@ -1048,9 +1065,24 @@ textarea.fi{resize:vertical;min-height:70px;line-height:1.5}
       <div class="fg"><label class="fl">Biography <span style="color:var(--txt4)">(optional)</span></label><textarea class="fi" id="ob-bio" placeholder="A brief tale of your legend..." style="min-height:70px;resize:none"></textarea></div>
       <div class="ob-nav">
         <button class="btn btn-g" onclick="obNext(0)">← Back</button>
+        <button class="btn btn-p" onclick="obNext(2)">Choose Heritage →</button>
+      </div>
+    </div>
+
+    <!-- ── Step 2: Choose Race & Class ── -->
+    <div class="ob-step" id="ob-s2">
+      <div class="ob-title">Choose Your Heritage</div>
+      <div class="ob-desc">Your race grants a small starting bonus — but your real power comes from your habits.</div>
+      <div class="rc-grid" id="ob-race-grid"><!-- filled by JS --></div>
+      <div class="ob-section-sep">Choose Your Class</div>
+      <div class="ob-desc" style="margin-bottom:.8rem;font-size:.82rem">Your class focuses your growth. Associated stats earn +10% XP from habits.</div>
+      <div class="rc-grid" id="ob-class-grid"><!-- filled by JS --></div>
+      <div class="ob-nav">
+        <button class="btn btn-g" onclick="obNext(1)">← Back</button>
         <button class="btn btn-p" onclick="obNext(3)">Begin Tour →</button>
       </div>
     </div>
+
     <!-- ── Step 3: Tour (renumbered) ── -->
     <div class="ob-step" id="ob-s3">
       <div class="ob-title">The Seven Attributes</div>
@@ -1451,7 +1483,8 @@ textarea.fi{resize:vertical;min-height:70px;line-height:1.5}
           <span class="title-badge title-xp" id="p-title-hero" style="font-size:.78rem;padding:.26rem .9rem">⚜ Novice</span>
         </div>
         <div id="p-prestige" class="pbadge" style="display:none;margin-bottom:.38rem">✦ PRESTIGE</div>
-        <div style="font-size:.92rem;color:var(--txt3)" id="p-bio">—</div>
+        <div class="char-identity" id="p-char-identity"><!-- filled by rProfile --></div>
+        <div style="font-size:.92rem;color:var(--txt3);margin-top:.3rem" id="p-bio">—</div>
       </div>
       <div style="text-align:center">
         <div class="cinzel-d gold" style="font-size:1.9rem" id="p-lv">0</div>
@@ -1501,6 +1534,16 @@ textarea.fi{resize:vertical;min-height:70px;line-height:1.5}
             <div id="e-title-hint" style="font-size:.75rem;color:var(--txt3);margin-top:.3rem;line-height:1.5">
               — unlock more titles by completing challenges
             </div>
+          </div>
+
+          <!-- Race & Class picker -->
+          <div class="fg" id="e-char-group">
+            <label class="fl">Race &amp; Class</label>
+            <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.35rem">
+              <select class="fi" id="e-race-picker" style="flex:1;min-width:120px;font-size:.8rem;padding:.42rem .7rem"><!-- filled by rProfile --></select>
+              <select class="fi" id="e-class-picker" style="flex:1;min-width:120px;font-size:.8rem;padding:.42rem .7rem"><!-- filled by rProfile --></select>
+            </div>
+            <div style="font-size:.75rem;color:var(--txt3);line-height:1.5" id="e-char-hint">—</div>
           </div>
 
           <button class="btn btn-p btn-w" onclick="saveProfile()">Save Changes</button>
@@ -1876,6 +1919,24 @@ const STATS = [
   {id:'wlth',name:'Wealth',       icon:'◈',  color:'var(--wlth)', css:'wlth', desc:'Financial — saving, investing, business, overtime'},
 ];
 
+// ── Race & Class System ───────────────────────────────────────────────────────
+const RACES = [
+  {id:'human',    name:'Human',    icon:'👤', desc:'+1 any stat (you choose)',       bonusStats:[], choosable:true},
+  {id:'elf',      name:'Elf',      icon:'🧝', desc:'+Dexterity · +Intelligence',     bonusStats:['dex','int']},
+  {id:'dwarf',    name:'Dwarf',    icon:'⛏',  desc:'+Strength · +Constitution',      bonusStats:['str','con']},
+  {id:'orc',      name:'Orc',      icon:'💪', desc:'+Strength (focused)',             bonusStats:['str','str']},
+  {id:'tiefling', name:'Tiefling', icon:'🌑', desc:'+Charisma · +Intelligence',      bonusStats:['cha','int']},
+  {id:'halfling', name:'Halfling', icon:'🍃', desc:'+Dexterity · +Wisdom',           bonusStats:['dex','wis']},
+];
+const CLASSES = [
+  {id:'warrior',  name:'Warrior',  icon:'⚔',  desc:'Strength & Constitution +10% XP', xpStats:['str','con']},
+  {id:'scholar',  name:'Scholar',  icon:'📚', desc:'Intelligence +10% XP',             xpStats:['int']},
+  {id:'monk',     name:'Monk',     icon:'🧘', desc:'Wisdom +10% XP',                   xpStats:['wis']},
+  {id:'bard',     name:'Bard',     icon:'🎭', desc:'Charisma +10% XP',                 xpStats:['cha']},
+  {id:'merchant', name:'Merchant', icon:'💰', desc:'Wealth +10% XP',                   xpStats:['wlth']},
+];
+const RACE_BONUS_XP = 200; // ~2 levels of starting advantage per boosted stat
+
 // XP curve: reaching level N costs N*100 XP. Level 20 total = 21,000.
 const lvXP  = n => n * 100;
 const MAX_XP = 21000; // sum 1..20 * 100
@@ -2125,6 +2186,7 @@ let user=null, xpMap={}, checked={}, todayXP=0, tasks={}, commCh=[], lbSort='lv'
 let doneChallengeIds=new Set();
 let activeTitleId=null;
 let streak=0;
+let character={race:'human', class_:'warrior', humanBonus:'str'};
 
 // ── Persistence helpers ───────────────────────────────────────────────────────
 function todayStr(){ return new Date().toISOString().slice(0,10); }
@@ -2460,7 +2522,7 @@ function updateObReq(sid){
 
 // ── Navigation ────────────────────────────────────────────────────────────────
 // Map step IDs to dot indices (step 2 removed)
-const OB_STEP_DOT = {0:0, 1:1, 3:2, 4:3, 5:4};
+const OB_STEP_DOT = {0:0, 1:1, 2:2, 3:3, 4:4, 5:5};
 function obNext(step){
   // Validate leaving current step
   if(obCurrentStep === 1){
@@ -2468,6 +2530,8 @@ function obNext(step){
     if(!name){ toast('Name Required','Enter a character name to continue.'); return; }
   }
   obCurrentStep = step;
+  // Build race/class grids when entering step 2
+  if(step === 2) buildObRaceClass();
   // Wide wrap on goal step
   const wrap = document.getElementById('ob-wrap-el');
   if(wrap) wrap.className = (step === 4) ? 'ob-wrap ob-wrap-wide' : 'ob-wrap';
@@ -2517,6 +2581,20 @@ function obFinish(){
   });
   localStorage.setItem('sim_weekly_goals', JSON.stringify(weeklyGoals));
   localStorage.setItem('sim_tasks', JSON.stringify(tasks));
+
+  // Save character race/class and apply one-time race starting bonus
+  saveCharacter();
+  if(!localStorage.getItem('sim_race_applied')){
+    const r=getRaceObj();
+    const bonusStats = r.id==='human' ? [character.humanBonus||'str'] : r.bonusStats;
+    const statCounts={};
+    bonusStats.forEach(s=>{ statCounts[s]=(statCounts[s]||0)+1; });
+    Object.entries(statCounts).forEach(([sid,count])=>{
+      xpMap[sid]=(xpMap[sid]||0)+RACE_BONUS_XP*count;
+    });
+    localStorage.setItem('sim_race_applied','1');
+    saveProgress();
+  }
 
   obNext(5);
 }
@@ -2922,6 +3000,69 @@ function doRegister(){
 }
 function showErr(m){const e=document.getElementById('lerr');e.textContent=m;e.classList.remove('hide')}
 
+/* ================================================================
+   CHARACTER IDENTITY SYSTEM
+================================================================ */
+function loadCharacter(){
+  try{ const s=localStorage.getItem('sim_character'); if(s) character=JSON.parse(s); }catch(e){}
+}
+
+function saveCharacter(){
+  localStorage.setItem('sim_character', JSON.stringify(character));
+}
+
+// Returns XP multiplier for a stat based on player's class (1.0 or 1.1)
+function getClassXPMult(sid){
+  const cls=CLASSES.find(c=>c.id===character.class_);
+  return (cls && cls.xpStats.includes(sid)) ? 1.1 : 1;
+}
+
+function getRaceObj(){ return RACES.find(r=>r.id===character.race)||RACES[0]; }
+function getClassObj(){ return CLASSES.find(c=>c.id===character.class_)||CLASSES[0]; }
+
+// Returns HTML for the two character identity badges (race + class)
+function charIdentityHTML(){
+  const r=getRaceObj(), c=getClassObj();
+  return `<span class="char-badge cb-race">${r.icon} ${r.name}</span><span class="char-badge cb-class">${c.icon} ${c.name}</span>`;
+}
+
+// Returns a milestone icon string for a given stat level
+function milestoneBadge(lv){
+  if(lv>=20) return '<span class="stat-milestone" title="Level 20 — Prestige Crown">👑</span>';
+  if(lv>=15) return '<span class="stat-milestone" title="Level 15 — Legendary Weapon">⚔</span>';
+  if(lv>=10) return '<span class="stat-milestone" title="Level 10 — Aura Awakened">✨</span>';
+  if(lv>=5)  return '<span class="stat-milestone" title="Level 5 — First Armor">⭐</span>';
+  return '';
+}
+
+// Builds the race & class selection grids for onboarding step 2
+function buildObRaceClass(){
+  const rg=document.getElementById('ob-race-grid');
+  const cg=document.getElementById('ob-class-grid');
+  if(rg) rg.innerHTML=RACES.map(r=>`
+    <div class="rc-card${character.race===r.id?' sel':''}" id="orc-${r.id}" onclick="selectObRace('${r.id}')">
+      <div class="rc-card-icon">${r.icon}</div>
+      <div class="rc-card-name">${r.name}</div>
+      <div class="rc-card-bonus">${r.desc}</div>
+    </div>`).join('');
+  if(cg) cg.innerHTML=CLASSES.map(c=>`
+    <div class="rc-card${character.class_===c.id?' sel':''}" id="occ-${c.id}" onclick="selectObClass('${c.id}')">
+      <div class="rc-card-icon">${c.icon}</div>
+      <div class="rc-card-name">${c.name}</div>
+      <div class="rc-card-bonus">${c.desc}</div>
+    </div>`).join('');
+}
+
+function selectObRace(id){
+  character.race=id;
+  document.querySelectorAll('#ob-race-grid .rc-card').forEach(el=>el.classList.toggle('sel',el.id==='orc-'+id));
+}
+
+function selectObClass(id){
+  character.class_=id;
+  document.querySelectorAll('#ob-class-grid .rc-card').forEach(el=>el.classList.toggle('sel',el.id==='occ-'+id));
+}
+
 function boot(){
   // Auto-restore user from localStorage if coming back from a page reload
   if(!user){
@@ -2942,6 +3083,7 @@ function boot(){
   doneChallengeIds = new Set(JSON.parse(localStorage.getItem('sim_done_ch')||'[]'));
   loadChProgress();
   activeTitleId    = localStorage.getItem('sim_active_title')||null;
+  loadCharacter();
 
   // Restore cumulative XP + today's checks + streak (order matters: tasks must be loaded first)
   loadProgress();
@@ -3012,7 +3154,8 @@ function rDash(){
     d.className=_bc;
     d.style.animationDelay=(i*.04)+'s';
     d.onclick=()=>openStat(s.id);
-    d.innerHTML=`<div class="sc-top"><div class="sc-name c${s.id}">${s.icon} ${s.name.toUpperCase()}</div><div class="sc-lv">Lv. ${lv.lv}${lv.prestige?' ★':''}</div></div><div class="bar-t"><div class="bar-f b${s.id}" style="width:${lv.pct}%"></div></div><div class="sc-xp">${lv.lv<20?`${lv.cur} / ${lv.nxt} XP → Level ${lv.lv+1}`:'⭐ MAX LEVEL'}</div>`;
+    const isBoosted=getClassXPMult(s.id)>1;
+    d.innerHTML=`<div class="sc-top"><div class="sc-name c${s.id}">${s.icon} ${s.name.toUpperCase()}${isBoosted?'<span class="stat-milestone" title="'+getClassObj().name+' class — +10% XP" style="color:var(--gold)">✦</span>':''}</div><div class="sc-lv">Lv. ${lv.lv}${milestoneBadge(lv.lv)}${lv.prestige?' ★':''}</div></div><div class="bar-t"><div class="bar-f b${s.id}" style="width:${lv.pct}%"></div></div><div class="sc-xp">${lv.lv<20?`${lv.cur} / ${lv.nxt} XP → Level ${lv.lv+1}`:'👑 MAX LEVEL'}</div>`;
     g.appendChild(d);
   });
   // Spider — deferred one frame so canvas has non-zero layout dimensions
@@ -3207,16 +3350,21 @@ function togTask(sid,idx,xp,el){
   el.textContent = !was ? '✓' : '';
   const tx=el.nextElementSibling; if(tx) tx.classList.toggle('done',!was);
 
+  // Apply class XP multiplier (+10% for associated stats)
+  const classMult=getClassXPMult(sid);
+  const actualXP=classMult>1?Math.round(xp*classMult):xp;
+
   if(!was){
-    xpMap[sid] = (xpMap[sid]||0)+xp;
-    todayXP   += xp;
-    showXpp(el,`+${xp} XP`);
-    toast(`✦ +${xp} ${STATS.find(s=>s.id===sid).name} XP`, 'Task logged');
+    xpMap[sid] = (xpMap[sid]||0)+actualXP;
+    todayXP   += actualXP;
+    showXpp(el,`+${actualXP} XP`);
+    const statName=STATS.find(s=>s.id===sid).name;
+    toast(`✦ +${actualXP} ${statName} XP`, classMult>1?`${getClassObj().name} class bonus!`:'Task logged');
     const newLv = fromXP(xpMap[sid]).lv;
     if(newLv > oldLv) showLevelUp(sid, newLv);
   } else {
-    xpMap[sid] = Math.max(0,(xpMap[sid]||0)-xp);
-    todayXP    = Math.max(0,todayXP-xp);
+    xpMap[sid] = Math.max(0,(xpMap[sid]||0)-actualXP);
+    todayXP    = Math.max(0,todayXP-actualXP);
   }
 
   saveProgress();
@@ -4234,6 +4382,22 @@ function rProfile(){
 
   const pres=STATS.some(s=>fromXP(xpMap[s.id]||0).prestige);
   document.getElementById('p-prestige').style.display=pres?'':'none';
+
+  // Character identity badges
+  const ci=document.getElementById('p-char-identity');
+  if(ci) ci.innerHTML=charIdentityHTML();
+
+  // Populate race/class dropdowns in edit form
+  const eRacePicker=document.getElementById('e-race-picker');
+  if(eRacePicker) eRacePicker.innerHTML=RACES.map(r=>`<option value="${r.id}"${r.id===character.race?' selected':''}>${r.icon} ${r.name} — ${r.desc}</option>`).join('');
+  const eClassPicker=document.getElementById('e-class-picker');
+  if(eClassPicker) eClassPicker.innerHTML=CLASSES.map(c=>`<option value="${c.id}"${c.id===character.class_?' selected':''}>${c.icon} ${c.name} — ${c.desc}</option>`).join('');
+  const eCharHint=document.getElementById('e-char-hint');
+  if(eCharHint){
+    const cls=getClassObj();
+    eCharHint.textContent=`${cls.name} class grants +10% XP for ${cls.xpStats.map(s=>STATS.find(x=>x.id===s)?.name).join(' & ')}`;
+  }
+
   // Show admin mode button only for the registered admin UID
   // Show admin button if: slot unclaimed, OR adminMode is already active for this session
   // The real security gate is _admGuard() inside each admin function.
@@ -4356,6 +4520,12 @@ function saveProfile(){
   // Save currently selected title
   const picker=document.getElementById('e-title-picker');
   if(picker) setActiveTitle(picker.value);
+  // Save race/class selection
+  const eRace=document.getElementById('e-race-picker');
+  const eClass=document.getElementById('e-class-picker');
+  if(eRace) character.race=eRace.value;
+  if(eClass) character.class_=eClass.value;
+  saveCharacter();
   applyPhotoToUI();
   rProfile();rDash();
   toast('✦ Profile Saved','Character updated.');
@@ -5743,6 +5913,8 @@ window.logChProgress = logChProgress;
 window.ltab = ltab;
 window.obFinish = obFinish;
 window.obNext = obNext;
+window.selectObRace = selectObRace;
+window.selectObClass = selectObClass;
 window.onTitlePick = onTitlePick;
 window.openAdminPanel = openAdminPanel;
 window.openChSub = openChSub;
